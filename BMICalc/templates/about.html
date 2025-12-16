@@ -1,164 +1,146 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>About Us - BMI Calculator</title>
+  <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
   <style>
-    /* -------------------------------
-       GLOBAL STYLES AND BACKGROUND
-    -------------------------------- */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: 'Segoe UI', sans-serif; /* Clean, modern font */
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%); /* Soft gradient background */
-      color: #2c3e50; /* Dark slate text for readability */
+      font-family: 'Poppins', sans-serif;
+      background-color: #f5f7fa;
+      color: #333;
+      line-height: 1.6;
     }
 
-    .container {
-      max-width: 1100px; /* Limits content width for better readability */
-      margin: 0 auto; /* Centers the container horizontally */
-      padding: 40px 20px; /* Adds space around content */
+    /* ✅ Navigation Bar */
+    nav {
+      background: linear-gradient(90deg, #003366, #005f8e);
+      color: #fff;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
+    nav h1 { font-size: 1.6rem; font-weight: 700; }
+    nav ul { list-style: none; display: flex; gap: 20px; }
+    nav ul li a {
+      text-decoration: none; color: #fff; font-weight: 500;
+      transition: color 0.3s ease;
+    }
+    nav ul li a:hover { color: #2ecc71; }
 
-    /* -------------------------------
-       HEADER SECTION
-    -------------------------------- */
-    .header {
+    /* ✅ Hero Section */
+    header {
       text-align: center;
-      margin-bottom: 50px;
+      padding: 80px 20px;
+      background: linear-gradient(135deg, #003366, #2ecc71);
+      color: #fff;
     }
+    header h2 { font-size: 2.8rem; margin-bottom: 15px; font-weight: 700; }
+    header p { font-size: 1.2rem; max-width: 700px; margin: auto; }
 
-    .header h1 {
-      font-size: 3em; /* Large title */
-      color: #1a1a1a;
-      margin-bottom: 10px;
+    /* ✅ Content Sections */
+    section {
+      padding: 60px 20px;
+      max-width: 1100px;
+      margin: auto;
     }
-
-    .header h2 {
-      font-size: 1.4em;
-      color: #555;
-      font-weight: 400;
+    h3.section-title {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 40px;
+      color: #003366;
     }
-
-    /* -------------------------------
-       CONTENT SECTIONS (Overview, Tech Stack, Team)
-    -------------------------------- */
-    .section {
-      background-color: #ffffff; /* White card background */
+    .content-box {
+      background: #fff;
+      border-radius: 12px;
       padding: 30px;
-      border-radius: 10px; /* Rounded corners */
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05); /* Soft shadow for elevation */
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
       margin-bottom: 30px;
     }
+    .content-box h3 { margin-top: 0; color: #2ecc71; }
 
-    .section h3 {
-      margin-top: 0;
-      color: #1a1a1a;
-    }
-
-    .tech-stack ul {
-      padding-left: 20px; /* Indents list items */
-    }
-
-    /* -------------------------------
-       TEAM SECTION GRID LAYOUT
-    -------------------------------- */
+    /* ✅ Team Section */
     .team-section {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); /* Responsive columns */
-      gap: 20px; /* Space between cards */
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
     }
-
-    /* -------------------------------
-       TEAM PROFILE CARD STYLING
-    -------------------------------- */
     .profile {
       display: flex;
       align-items: center;
-      background-color: #ffffff;
+      background: #fff;
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-      text-decoration: none; /* Removes underline from link */
-      color: inherit; /* Inherits text color */
+      text-decoration: none;
+      color: inherit;
       transition: box-shadow 0.2s ease, transform 0.2s ease;
-      border-left: 5px solid #0077b6; /* Blue accent border */
+      border-left: 5px solid #2ecc71;
     }
-
     .profile:hover {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Stronger shadow on hover */
-      transform: translateY(-3px); /* Slight lift effect */
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transform: translateY(-3px);
     }
-
-    /* -------------------------------
-       AVATAR IMAGE AND INITIALS
-    -------------------------------- */
     .avatar {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%; /* Circular shape */
-      background-color: #dfe6e9; /* Light gray fallback */
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background-color: #dfe6e9;
       overflow: hidden;
       margin-right: 20px;
       flex-shrink: 0;
       position: relative;
     }
-
-    .avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover; /* Ensures image fills circle */
-    }
-
+    .avatar img { width: 100%; height: 100%; object-fit: cover; }
     .initials {
-      position: absolute;
-      top: 50%;
-      left: 50%;
+      position: absolute; top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 20px;
-      font-weight: bold;
-      color: #636e72;
+      font-size: 20px; font-weight: bold; color: #636e72;
     }
+    .meta .name { font-size: 18px; font-weight: 600; margin-bottom: 5px; }
+    .meta .role { font-size: 14px; color: #555; }
 
-    /* -------------------------------
-       PROFILE TEXT METADATA
-    -------------------------------- */
-    .meta .name {
-      font-size: 18px;
-      font-weight: 600;
-      margin-bottom: 5px;
-    }
-
-    .meta .role {
-      font-size: 14px;
-      color: #555;
+    /* ✅ Footer */
+    footer {
+      text-align: center;
+      padding: 25px;
+      font-size: 0.9rem;
+      color: #777;
+      background: #f0f0f0;
+      border-top: 1px solid #ddd;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- ===============================
-         HEADER SECTION
-    ================================== -->
-    <div class="header">
-      <h1>About Us</h1>
-      <h2>BMI Calculator and Health Instruction System</h2>
-    </div>
+  <!-- ✅ Navigation -->
+  <nav>
+    <h1>BMI System</h1>
+    <ul>
+      <li><a href="{% url 'about' %}">About</a></li>
+      <li><a href="{% url 'login' %}">Login</a></li>
+      <li><a href="{% url 'register' %}">Register</a></li>
+    </ul>
+  </nav>
 
-    <!-- ===============================
-         PROJECT OVERVIEW SECTION
-    ================================== -->
-    <div class="section">
+  <!-- ✅ Hero -->
+  <header>
+    <h2>About Us</h2>
+    <p>BMI Calculator & Health Instruction System — developed by B.Tech AIML students.</p>
+  </header>
+
+  <!-- ✅ Overview -->
+  <section>
+    <div class="content-box">
       <h3>Overview</h3>
       <p>This is a 3rd year minor project developed by B.Tech AIML students. Our system provides accurate BMI calculations and personalized health instructions based on user inputs.</p>
     </div>
 
-    <!-- ===============================
-         TECHNOLOGY STACK SECTION
-    ================================== -->
-    <div class="section tech-stack">
+    <!-- ✅ Tech Stack -->
+    <div class="content-box">
       <h3>Technology Stack</h3>
       <ul>
         <li>Frontend: HTML, CSS, JavaScript</li>
@@ -167,16 +149,13 @@
       </ul>
     </div>
 
-    <!-- ===============================
-         TEAM MEMBERS SECTION
-    ================================== -->
-    <div class="section">
+    <!-- ✅ Team -->
+    <div class="content-box">
       <h3>Our Team</h3>
       <div class="team-section">
-        <!-- Prem Raghuvanshi -->
-        <a href="https://www.linkedin.com/in/premraghuvanshi" target="_blank" rel="noopener noreferrer" class="profile">
+        <a href="https://www.linkedin.com/in/premraghuvanshi" target="_blank" class="profile">
           <div class="avatar">
-            <img src="/static/images/prem.jpg" alt="Prem Raghuvanshi" onerror="this.style.display='none'">
+            <img src="{% static 'images/prem.jpg' %}" alt="Prem Raghuvanshi" onerror="this.style.display='none'">
             <span class="initials">PR</span>
           </div>
           <div class="meta">
@@ -185,10 +164,9 @@
           </div>
         </a>
 
-        <!-- Vedansh Joshi -->
-        <a href="https://www.linkedin.com/in/vedanshjoshi" target="_blank" rel="noopener noreferrer" class="profile">
+        <a href="https://www.linkedin.com/in/vedanshjoshi" target="_blank" class="profile">
           <div class="avatar">
-            <img src="/static/images/vedansh.jpg" alt="Vedansh Joshi" onerror="this.style.display='none'">
+            <img src="{% static 'images/vedansh.jpg' %}" alt="Vedansh Joshi" onerror="this.style.display='none'">
             <span class="initials">VJ</span>
           </div>
           <div class="meta">
@@ -197,10 +175,9 @@
           </div>
         </a>
 
-        <!-- Yash Gujarathi -->
-        <a href="https://www.linkedin.com/in/yashgujarathi" target="_blank" rel="noopener noreferrer" class="profile">
+        <a href="https://www.linkedin.com/in/yashgujarathi" target="_blank" class="profile">
           <div class="avatar">
-            <img src="/static/images/yash_g.jpg" alt="Yash Gujarathi" onerror="this.style.display='none'">
+            <img src="{% static 'images/yash_g.jpg' %}" alt="Yash Gujarathi" onerror="this.style.display='none'">
             <span class="initials">YG</span>
           </div>
           <div class="meta">
@@ -209,10 +186,9 @@
           </div>
         </a>
 
-        <!-- Yash Pathak -->
-        <a href="https://www.linkedin.com/in/yashpathak" target="_blank" rel="noopener noreferrer" class="profile">
+        <a href="https://www.linkedin.com/in/yashpathak" target="_blank" class="profile">
           <div class="avatar">
-            <img src="/static/images/yash_p.jpg" alt="Yash Pathak" onerror="this.style.display='none'">
+            <img src="{% static 'images/yash_p.jpg' %}" alt="Yash Pathak" onerror="this.style.display='none'">
             <span class="initials">YP</span>
           </div>
           <div class="meta">
@@ -222,6 +198,11 @@
         </a>
       </div>
     </div>
-  </div>
+  </section>
+
+  <!-- ✅ Footer -->
+  <footer>
+    &copy; 2025 BMI Calculator & Health Instruction System. All rights reserved.
+  </footer>
 </body>
 </html>

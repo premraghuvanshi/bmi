@@ -1,154 +1,193 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- ===============================
-       META AND PAGE SETTINGS
-  ================================== -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Change Password - BMI Calculator</title>
+  <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
 
-  <!-- ===============================
-       CSS STYLING
-  ================================== -->
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
-      margin: 0;
-      padding: 0;
-      color: #2c3e50;
+      font-family: 'Poppins', sans-serif;
+      background-color: #f5f7fa;
+      color: #333;
+      line-height: 1.6;
     }
 
-    .container {
-      max-width: 400px;
-      margin: 80px auto;
-      background-color: #fff;
-      padding: 30px;
-      border-radius: 10px;
+    /* ✅ Navigation Bar */
+    nav {
+      background: linear-gradient(90deg, #003366, #005f8e);
+      color: #fff;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
+    nav h1 { font-size: 1.6rem; font-weight: 700; margin: 0; }
+    nav ul { list-style: none; display: flex; gap: 20px; margin: 0; padding: 0; }
+    nav ul li a {
+      text-decoration: none; color: #fff; font-weight: 500;
+      transition: color 0.3s ease;
+    }
+    nav ul li a:hover { color: #2ecc71; }
 
-    h2 {
+    /* ✅ Hero Section */
+    header {
+      text-align: center;
+      padding: 60px 20px;
+      background: linear-gradient(135deg, #003366, #2ecc71);
+      color: #fff;
+    }
+    header h2 { font-size: 2.4rem; margin-bottom: 15px; font-weight: 700; }
+    header p { font-size: 1.1rem; max-width: 700px; margin: auto; }
+
+    /* ✅ Form Container */
+    .container {
+      max-width: 420px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    }
+    .container h3 {
       text-align: center;
       margin-bottom: 20px;
+      color: #003366;
     }
 
     label {
       display: block;
-      margin-bottom: 5px;
+      margin-bottom: 6px;
       font-weight: 500;
+      color: #005f8e;
     }
-
     input[type="password"] {
-      width: 95%;
-      padding: 10px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-
-    .button-wrapper {
-      text-align: center;
-      margin-top: 10px;
-    }
-
-    button {
-      width: 85%;
+      width: 100%;
       padding: 12px;
-      background-color: #0077b6;
+      margin-bottom: 18px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 15px;
+      transition: border-color 0.3s ease;
+    }
+    input[type="password"]:focus {
+      border-color: #2ecc71;
+      outline: none;
+      box-shadow: 0 0 6px rgba(46,204,113,0.4);
+    }
+
+    .button-wrapper { text-align: center; margin-top: 10px; }
+    button {
+      width: 90%;
+      padding: 12px;
+      background: linear-gradient(90deg, #003366, #2ecc71);
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 30px;
       font-size: 16px;
+      font-weight: 600;
       cursor: pointer;
+      transition: transform 0.2s ease, opacity 0.3s ease;
     }
-
     button:hover {
-      background-color: #005f8e;
+      opacity: 0.9;
+      transform: translateY(-2px);
     }
 
-    .login-link {
-      text-align: center;
-      margin-top: 20px;
+    .messages {
+      margin-bottom: 15px;
+      color: red;
       font-size: 14px;
+      text-align: center;
     }
 
-    .login-link a {
-      color: #0077b6;
-      text-decoration: none;
-    }
-
-    .login-link a:hover {
-      text-decoration: underline;
+    /* ✅ Footer */
+    footer {
+      text-align: center;
+      padding: 25px;
+      font-size: 0.9rem;
+      color: #777;
+      background: #f0f0f0;
+      border-top: 1px solid #ddd;
+      margin-top: 40px;
     }
   </style>
 
-  <!-- ===============================
-       JAVASCRIPT VALIDATION
-  ================================== -->
   <script>
     function validateChangeForm() {
       const newPass = document.getElementById("new_password").value.trim();
       const confirmPass = document.getElementById("confirm_password").value.trim();
+      const messagesDiv = document.querySelector(".messages");
+
+      // Clear previous messages
+      if (messagesDiv) messagesDiv.innerHTML = "";
 
       if (!newPass || !confirmPass) {
-        alert("Please fill in both password fields.");
+        if (messagesDiv) messagesDiv.innerHTML = "Please fill in both password fields.";
         return false;
       }
-
       if (newPass.length < 8) {
-        alert("Password must be at least 8 characters long.");
+        if (messagesDiv) messagesDiv.innerHTML = "Password must be at least 8 characters long.";
         return false;
       }
-
       if (!/[a-zA-Z]/.test(newPass)) {
-        alert("Password must contain at least one letter.");
+        if (messagesDiv) messagesDiv.innerHTML = "Password must contain at least one letter.";
         return false;
       }
-
       if (newPass !== confirmPass) {
-        alert("Passwords do not match.");
+        if (messagesDiv) messagesDiv.innerHTML = "Passwords do not match.";
         return false;
       }
-
       return true;
     }
   </script>
 </head>
 <body>
-  <!-- ===============================
-       CHANGE PASSWORD FORM CONTAINER
-  ================================== -->
-  <div class="container">
-    <h2>Change Password</h2>
 
-    <!-- ===============================
-         PASSWORD CHANGE FORM
-    ================================== -->
+  <!-- ✅ Navigation -->
+  <nav>
+    <h1>BMI System</h1>
+    <ul>
+      <li><a href="{% url 'about' %}">About</a></li>
+      <li><a href="{% url 'login' %}">Login</a></li>
+      <li><a href="{% url 'register' %}">Register</a></li>
+    </ul>
+  </nav>
+
+  <!-- ✅ Hero -->
+  <header>
+    <h2>Change Password</h2>
+    <p>Update your account credentials securely.</p>
+  </header>
+
+  <!-- ✅ Form Section -->
+  <div class="container">
+    <h3>Reset Your Password</h3>
+
+    <div class="messages"></div> <!-- Error messages will appear here -->
+
     <form method="POST" onsubmit="return validateChangeForm();">
       {% csrf_token %}
-
-      <!-- New password input -->
       <label for="new_password">New Password</label>
       <input type="password" name="new_password" id="new_password" />
 
-      <!-- Confirm password input -->
       <label for="confirm_password">Re-enter Password</label>
       <input type="password" name="confirm_password" id="confirm_password" />
 
-      <!-- Submit button -->
       <div class="button-wrapper">
         <button type="submit">Change Password</button>
       </div>
     </form>
-
-    <!-- ===============================
-         LOGIN LINK
-    ================================== -->
-    <div class="login-link">
-      <a href="{% url 'login' %}">Back to Login</a>
-    </div>
   </div>
+
+  <!-- ✅ Footer -->
+  <footer>
+    &copy; 2025 BMI Calculator & Health Instruction System. All rights reserved.
+  </footer>
+
 </body>
 </html>
