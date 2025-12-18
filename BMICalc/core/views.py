@@ -2,7 +2,6 @@ from django.contrib.auth.hashers import check_password, make_password
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail
 from django.contrib import messages
-from datetime import datetime
 from .models import User, BMIRecord
 import random
 
@@ -41,12 +40,12 @@ def register(request):
         )
 
         request.session['email'] = email
+        messages.success(request, 'Registration successful! Please check your email for OTP.')
         return redirect('verify')
 
     return render(request, 'register.html')
 
 def login(request):
-    # Clear session data to avoid stale popups
     request.session.pop('user_name', None)
     request.session.pop('user_id', None)
     request.session.pop('email', None)
@@ -59,15 +58,16 @@ def login(request):
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
-            messages.error(request, 'Invalid login credentials. Please try again.')
+            messages.error(request, 'Invalid Email. Please try again.')
             return redirect('login')
 
         if not check_password(password, user.password) or not user.is_verified:
-            messages.error(request, 'Invalid login credentials. Please try again.')
+            messages.error(request, 'Invalid Password. Please try again.')
             return redirect('login')
 
         request.session['user_id'] = user.id
         request.session['user_name'] = user.name
+        messages.success(request, f'Welcome back, {user.name}!')
         return redirect('user')
 
     return render(request, 'login.html')
@@ -95,6 +95,7 @@ def forget(request):
         )
 
         request.session['reset_email'] = email
+        messages.success(request, 'OTP sent to your email')
         return redirect('verify')
 
     return render(request, 'forget.html')
@@ -124,10 +125,12 @@ def verify(request):
             user.save()
 
             if flow == 'reset':
+                messages.success(request, 'OTP verified. You can now change your password.')
                 return redirect('changePass')
             else:
                 user.is_verified = True
                 user.save()
+                messages.success(request, 'Account verified successfully! Please log in.')
                 return redirect('login')
         else:
             messages.error(request, 'Invalid OTP. Please try again.')
@@ -149,8 +152,8 @@ def changePass(request):
             messages.error(request, 'Passwords do not match.')
             return redirect('changePass')
 
-        if len(new_password) < 8 or not any(c.isalpha() for c in new_password):
-            messages.error(request, 'Password must be at least 8 characters and contain letters.')
+        if len(new_password) < 6 or not any(c.isalpha() for c in new_password) or not any(c.isdigit() for c in new_password):
+            messages.error(request, 'Password must be at least 6 characters and contain both letters and numbers.')
             return redirect('changePass')
 
         try:
@@ -163,6 +166,7 @@ def changePass(request):
         user.save()
 
         del request.session['reset_email']
+        messages.success(request, 'Password changed successfully. Please log in with your new password.')
         return redirect('login')
 
     return render(request, 'changePass.html')
@@ -175,10 +179,8 @@ def user_home(request):
 
 def logout(request):
     request.session.flush()
+    messages.success(request, 'You have been logged out successfully.')
     return redirect('login')
-
-
-
 
 def calculate_bmi(request):
     if request.method == 'POST':
@@ -186,12 +188,11 @@ def calculate_bmi(request):
             height = float(request.POST.get('height'))
             weight = float(request.POST.get('weight'))
 
-            # Validation
             if height < 55 or height > 272:
-                messages.error(request, "Please enter valid height (55–272 cm).")
+                messages.error(request, "Please enter valid height.")
                 return redirect('calculate_bmi')
             if weight < 25 or weight > 150:
-                messages.error(request, "Please enter valid weight (25–150 kg).")
+                messages.error(request, "Please enter valid weight.")
                 return redirect('calculate_bmi')
 
             bmi = round(weight / ((height / 100) ** 2), 2)
@@ -205,7 +206,6 @@ def calculate_bmi(request):
             else:
                 status = "Obese"
 
-            # ✅ Save to database
             if 'user_id' in request.session:
                 user = User.objects.get(id=request.session['user_id'])
                 BMIRecord.objects.create(
@@ -216,6 +216,7 @@ def calculate_bmi(request):
                     status=status
                 )
 
+            messages.success(request, f'Your BMI was calculated successfully: {bmi} ({status}).')
             return render(request, 'calculate_bmi.html', {
                 'bmi': bmi,
                 'status': status,
@@ -234,5 +235,6 @@ def track_progress(request):
         return redirect('login')
 
     user = User.objects.get(id=request.session['user_id'])
-    records = user.bmi_records.order_by('created_at')  # oldest first
+    records = user.bmi_records.order_by('created_at')
+    
     return render(request, 'track_progress.html', {'records': records})

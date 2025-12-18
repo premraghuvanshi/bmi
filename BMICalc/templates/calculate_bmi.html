@@ -16,7 +16,6 @@
       color: #333;
     }
 
-    /* ✅ Navigation Bar */
     nav {
       background: linear-gradient(90deg, #003366, #005f8e);
       padding: 15px 40px;
@@ -25,60 +24,43 @@
       align-items: center;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
-    nav h1 {
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: #fff;
-      margin: 0;
-    }
-    nav ul {
-      list-style: none;
-      display: flex;
-      gap: 20px;
-      margin: 0;
-      padding: 0;
-    }
+    nav h1 { font-size: 1.6rem; font-weight: 700; color: #fff; margin: 0; }
+    nav ul { list-style: none; display: flex; gap: 20px; margin: 0; padding: 0; }
     nav ul li a {
-      text-decoration: none;
-      color: #fff;
-      font-weight: 500;
+      text-decoration: none; color: #fff; font-weight: 500;
       transition: color 0.3s ease;
     }
     nav ul li a:hover { color: #2ecc71; }
 
-   
-    /* ✅ Container */
-.container {
-  max-width: 400px;   /* reduce width */
-  margin: 60px auto;
-  background: #fff;
-  padding: 30px;      /* slightly smaller padding */
-  border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-  text-align: center;
-}
+    .container {
+      max-width: 400px;
+      margin: 60px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      text-align: center;
+    }
 
-/* ✅ Input fields */
-input {
-  width: 80%;         /* narrower than full width */
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  margin-bottom: 15px;
-}
+    input {
+      width: 80%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
 
     h2 { color: #003366; margin-bottom: 20px; }
     label { display: block; margin: 10px 0 5px; font-weight: 500; color: #005f8e; }
-    
-    .error {
-      font-size: 0.9rem;
-      color: red;
-      display: none;
-      margin-bottom: 5px;
-      text-align: left;
-    }
 
-    /* ✅ Buttons */
+    .messages {
+      margin-bottom: 15px;
+      font-size: 14px;
+      text-align: center;
+    }
+    .messages .error { color: red; }
+    .messages .success { color: green; }
+
     .btn {
       padding: 12px 30px;
       background: linear-gradient(90deg, #003366, #2ecc71);
@@ -115,7 +97,6 @@ input {
 </head>
 <body>
 
-  <!-- ✅ Navigation -->
   <nav>
     <h1>BMI System</h1>
     <ul>
@@ -125,59 +106,39 @@ input {
     </ul>
   </nav>
 
-  <!-- ✅ BMI Form -->
   <div class="container">
     <h2>Calculate Your BMI</h2>
-    <form method="POST" onsubmit="return validateForm()">
-      {% csrf_token %}
 
-      <div id="heightError" class="error">Please enter valid height</div>
+    {% if messages %}
+      <div class="messages">
+        {% for message in messages %}
+          <p class="{{ message.tags }}">{{ message }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <form method="POST">
+      {% csrf_token %}
       <label for="height">Height (cm)</label>
       <input type="number" name="height" id="height" required>
 
-      <div id="weightError" class="error">Please enter valid weight</div>
       <label for="weight">Weight (kg)</label>
       <input type="number" name="weight" id="weight" required>
 
-      <!-- ✅ Calculate button styled same as theme -->
       <button type="submit" class="btn">Calculate</button>
     </form>
 
-    <!-- ✅ Show BMI Result -->
     {% if bmi %}
     <div class="result">
       <h3>Your BMI Score: {{ bmi }}</h3>
       <p>Status: <strong>{{ status }}</strong></p>
       <div class="btn-group">
-        <!-- Buttons appear but not linked yet -->
         <a href="#" class="btn">View Diet</a>
         <a href="#" class="btn">View Workout</a>
       </div>
     </div>
     {% endif %}
   </div>
-
-  <script>
-    function validateForm() {
-      let height = document.getElementById("height").value;
-      let weight = document.getElementById("weight").value;
-      let valid = true;
-
-      document.getElementById("heightError").style.display = "none";
-      document.getElementById("weightError").style.display = "none";
-
-      if (height < 55 || height > 272) {
-        document.getElementById("heightError").style.display = "block";
-        valid = false;
-      }
-      if (weight < 25 || weight > 150) {
-        document.getElementById("weightError").style.display = "block";
-        valid = false;
-      }
-
-      return valid;
-    }
-  </script>
 
 </body>
 </html>

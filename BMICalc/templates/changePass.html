@@ -16,7 +16,6 @@
       line-height: 1.6;
     }
 
-    /* ✅ Navigation Bar */
     nav {
       background: linear-gradient(90deg, #003366, #005f8e);
       color: #fff;
@@ -34,7 +33,6 @@
     }
     nav ul li a:hover { color: #2ecc71; }
 
-    /* ✅ Hero Section */
     header {
       text-align: center;
       padding: 60px 20px;
@@ -44,7 +42,6 @@
     header h2 { font-size: 2.4rem; margin-bottom: 15px; font-weight: 700; }
     header p { font-size: 1.1rem; max-width: 700px; margin: auto; }
 
-    /* ✅ Form Container */
     .container {
       max-width: 420px;
       margin: 40px auto;
@@ -100,12 +97,12 @@
 
     .messages {
       margin-bottom: 15px;
-      color: red;
       font-size: 14px;
       text-align: center;
     }
+    .messages .error { color: red; }
+    .messages .success { color: green; }
 
-    /* ✅ Footer */
     footer {
       text-align: center;
       padding: 25px;
@@ -123,46 +120,39 @@
       const confirmPass = document.getElementById("confirm_password").value.trim();
       const messagesDiv = document.querySelector(".messages");
 
-      // Clear previous messages
       if (messagesDiv) messagesDiv.innerHTML = "";
 
-      // Empty check
       if (!newPass || !confirmPass) {
-        messagesDiv.innerHTML = "Please fill in both password fields.";
+        messagesDiv.innerHTML = "<span class='error'>Please fill in both password fields.</span>";
         return false;
       }
 
-      // ✅ Length check (at least 6 characters)
       if (newPass.length < 6) {
-        messagesDiv.innerHTML = "Password must be at least 6 characters long.";
+        messagesDiv.innerHTML = "<span class='error'>Password must be at least 6 characters long.</span>";
         return false;
       }
 
-      // ✅ Must contain at least one letter
       if (!/[a-zA-Z]/.test(newPass)) {
-        messagesDiv.innerHTML = "Password must contain at least one letter.";
+        messagesDiv.innerHTML = "<span class='error'>Password must contain at least one letter.</span>";
         return false;
       }
 
-      // ✅ Must contain at least one number
       if (!/[0-9]/.test(newPass)) {
-        messagesDiv.innerHTML = "Password must contain at least one number.";
+        messagesDiv.innerHTML = "<span class='error'>Password must contain at least one number.</span>";
         return false;
       }
 
-      // ✅ Confirm password match
       if (newPass !== confirmPass) {
-        messagesDiv.innerHTML = "Passwords do not match.";
+        messagesDiv.innerHTML = "<span class='error'>Passwords do not match.</span>";
         return false;
       }
 
-      return true; // All checks passed
+      return true;
     }
   </script>
 </head>
 <body>
 
-  <!-- ✅ Navigation -->
   <nav>
     <h1>BMI System</h1>
     <ul>
@@ -172,17 +162,21 @@
     </ul>
   </nav>
 
-  <!-- ✅ Hero -->
   <header>
     <h2>Change Password</h2>
     <p>Update your account credentials securely.</p>
   </header>
 
-  <!-- ✅ Form Section -->
   <div class="container">
     <h3>Reset Your Password</h3>
 
-    <div class="messages"></div> <!-- Error messages will appear here -->
+    {% if messages %}
+      <div class="messages">
+        {% for message in messages %}
+          <p class="{{ message.tags }}">{{ message }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
 
     <form method="POST" onsubmit="return validateChangeForm();">
       {% csrf_token %}
@@ -198,7 +192,6 @@
     </form>
   </div>
 
-  <!-- ✅ Footer -->
   <footer>
     &copy; 2025 BMI Calculator & Health Instruction System. All rights reserved.
   </footer>

@@ -1,22 +1,28 @@
+<!-- Load static files for Django -->
 {% load static %}
+
+<!-- Document type declaration -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Character encoding and viewport settings -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>BMI Calculator & Health Instruction System</title>
 
-  <!-- Favicon -->
+  <!-- Include favicon template -->
   {% include "fevicon.html" %}
 
-
+  <!-- Embedded CSS styles -->
   <style>
+    /* Reset default margins and paddings for all elements */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
+    /* Body styling: font, background, color, line height */
     body {
       font-family: 'Poppins', sans-serif;
       background-color: #f5f7fa;
@@ -24,7 +30,8 @@
       line-height: 1.6;
     }
 
-    /* ✅ Navigation Bar */
+    /* Navigation Bar Styles */
+    /* Main navigation container */
     nav {
       background: linear-gradient(90deg, #003366, #005f8e);
       color: #fff;
@@ -35,17 +42,20 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
+    /* Navigation title styling */
     nav h1 {
       font-size: 1.6rem;
       font-weight: 700;
     }
 
+    /* Navigation list styling */
     nav ul {
       list-style: none;
       display: flex;
       gap: 20px;
     }
 
+    /* Navigation link styling */
     nav ul li a {
       text-decoration: none;
       color: #fff;
@@ -53,11 +63,13 @@
       transition: color 0.3s ease;
     }
 
+    /* Navigation link hover effect */
     nav ul li a:hover {
       color: #2ecc71;
     }
 
-    /* ✅ Hero Section */
+    /* Hero Section Styles */
+    /* Hero header container */
     header {
       display: flex;
       flex-wrap: wrap;
@@ -68,6 +80,7 @@
       color: #fff;
     }
 
+    /* Hero text container */
     .hero-text {
       flex: 1;
       min-width: 300px;
@@ -75,18 +88,21 @@
       padding: 20px;
     }
 
+    /* Hero heading styling */
     .hero-text h2 {
       font-size: 2.8rem;
       margin-bottom: 15px;
       font-weight: 700;
     }
 
+    /* Hero paragraph styling */
     .hero-text p {
       font-size: 1.2rem;
       margin-bottom: 30px;
       max-width: 500px;
     }
 
+    /* Call-to-action button styling */
     .cta-button {
       text-decoration: none;
       background: #2ecc71;
@@ -99,36 +115,42 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
 
+    /* Call-to-action button hover effect */
     .cta-button:hover {
       background: #27ae60;
       transform: translateY(-3px);
       box-shadow: 0 6px 16px rgba(0,0,0,0.25);
     }
 
+    /* Hero image container */
     .hero-image {
       flex: 1;
       min-width: 300px;
       text-align: center;
     }
 
+    /* Hero image styling with animation */
     .hero-image img {
       max-width: 100%;
       height: auto;
       animation: float 4s ease-in-out infinite;
     }
 
+    /* Keyframe animation for floating effect */
     @keyframes float {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-10px); }
     }
 
-    /* ✅ Features Section */
+    /* Features Section Styles */
+    /* General section styling */
     section {
       padding: 60px 20px;
       max-width: 1100px;
       margin: auto;
     }
 
+    /* Section title styling */
     h3.section-title {
       text-align: center;
       font-size: 2rem;
@@ -136,12 +158,14 @@
       color: #003366;
     }
 
+    /* Features grid container */
     .features {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 30px;
     }
 
+    /* Individual feature box styling */
     .feature-box {
       background: #fff;
       border-radius: 12px;
@@ -151,23 +175,27 @@
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
+    /* Feature box hover effect */
     .feature-box:hover {
       transform: translateY(-8px);
       box-shadow: 0 10px 20px rgba(0,0,0,0.15);
     }
 
+    /* Feature box heading styling */
     .feature-box h4 {
       color: #2ecc71;
       margin-bottom: 15px;
       font-size: 1.3rem;
     }
 
+    /* Feature box paragraph styling */
     .feature-box p {
       color: #555;
       font-size: 0.95rem;
     }
 
-    /* ✅ Quote Section */
+    /* Quote Section Styles */
+    /* Quote section background and styling */
     .quote-section {
       background: linear-gradient(to right, #2ecc71, #003366);
       color: white;
@@ -175,13 +203,15 @@
       padding: 100px 20px;
     }
 
+    /* Quote heading styling */
     .quote-section h2 {
       font-size: 1.8rem;
       margin-bottom: 20px;
       font-weight: 500;
     }
 
-    /* ✅ Footer */
+    /* Footer Styles */
+    /* Footer container styling */
     footer {
       text-align: center;
       padding: 25px;
@@ -191,11 +221,15 @@
       border-top: 1px solid #ddd;
     }
 
+    /* Media Query for Responsive Design */
+    /* Styles for screens smaller than 768px */
     @media (max-width: 768px) {
+      /* Change header to column layout */
       header {
         flex-direction: column;
         text-align: center;
       }
+      /* Center hero text */
       .hero-text {
         text-align: center;
       }
@@ -203,8 +237,7 @@
   </style>
 </head>
 <body>
-
-  <!-- ✅ Navigation -->
+  <!-- Navigation Section -->
   <nav>
     <h1>BMI System</h1>
     <ul>
@@ -214,7 +247,7 @@
     </ul>
   </nav>
 
-  <!-- ✅ Hero -->
+  <!-- Hero Section -->
   <header>
     <div class="hero-text">
       <h2>BMI Calculator & Health Instruction System</h2>
@@ -226,7 +259,7 @@
     </div>
   </header>
 
-  <!-- ✅ Features -->
+  <!-- Features Section -->
   <section>
     <h3 class="section-title">What You Can Do</h3>
     <div class="features">
@@ -245,12 +278,12 @@
     </div>
   </section>
 
-  <!-- ✅ Quote -->
+  <!-- Quote Section -->
   <section class="quote-section">
     <h2>“Strong habits build a strong body.”</h2>
   </section>
 
-  <!-- ✅ Footer -->
+  <!-- Footer Section -->
   <footer>
     &copy; 2025 BMI Calculator & Health Instruction System. All rights reserved.
   </footer>
