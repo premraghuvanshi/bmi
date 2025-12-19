@@ -11,26 +11,52 @@ def index(request):
 def about(request):
     return render(request, 'about.html')
 
+# ---------------- REGISTER ----------------
 def register(request):
     if request.method == 'POST':
         name = request.POST.get('username')
         email = request.POST.get('email')
+        age = request.POST.get('age')
+        gender = request.POST.get('gender')
         password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
 
+        # Age validation
+        try:
+            age = int(age)
+        except (TypeError, ValueError):
+            messages.error(request, 'Please enter a valid age.')
+            return redirect('register')
+        if age < 15 or age > 100:
+            messages.error(request, 'Age must be between 15 and 100 years.')
+            return redirect('register')
+
+        # Confirm password
+        if password != confirm_password:
+            messages.error(request, 'Passwords do not match.')
+            return redirect('register')
+
+        # Email uniqueness
         if User.objects.filter(email=email).exists():
             messages.error(request, 'Email is already registered.')
             return redirect('register')
 
+        # Generate OTP
         otp = str(random.randint(100000, 999999))
+
+        # Save user
         user = User(
             name=name,
             email=email,
             password=make_password(password),
+            age=age,
+            gender=gender,
             otp_code=otp,
             is_verified=False
         )
         user.save()
 
+        # Send OTP
         send_mail(
             subject='Your OTP Code for BMI Calculator',
             message=f'Hello {name},\n\nYour OTP code is: {otp}',
@@ -39,17 +65,17 @@ def register(request):
             fail_silently=False,
         )
 
+        # Store email in session
         request.session['email'] = email
         messages.success(request, 'Registration successful! Please check your email for OTP.')
         return redirect('verify')
 
     return render(request, 'register.html')
 
+# ---------------- LOGIN ----------------
 def login(request):
     request.session.pop('user_name', None)
     request.session.pop('user_id', None)
-    request.session.pop('email', None)
-    request.session.pop('reset_email', None)
 
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -61,8 +87,12 @@ def login(request):
             messages.error(request, 'Invalid Email. Please try again.')
             return redirect('login')
 
-        if not check_password(password, user.password) or not user.is_verified:
+        if not check_password(password, user.password):
             messages.error(request, 'Invalid Password. Please try again.')
+            return redirect('login')
+
+        if not user.is_verified:
+            messages.error(request, 'Account not verified. Please check your email for OTP.')
             return redirect('login')
 
         request.session['user_id'] = user.id
@@ -72,6 +102,7 @@ def login(request):
 
     return render(request, 'login.html')
 
+# ---------------- FORGET PASSWORD ----------------
 def forget(request):
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -95,21 +126,22 @@ def forget(request):
         )
 
         request.session['reset_email'] = email
-        messages.success(request, 'OTP sent to your email')
+        messages.success(request, 'OTP sent to your email.')
         return redirect('verify')
 
     return render(request, 'forget.html')
 
+# ---------------- VERIFY OTP ----------------
 def verify(request):
     if request.method == 'POST':
         otp = request.POST.get('otp')
 
-        if 'email' in request.session:
-            email = request.session['email']
-            flow = 'register'
-        elif 'reset_email' in request.session:
+        if 'reset_email' in request.session:   # check reset first
             email = request.session['reset_email']
             flow = 'reset'
+        elif 'email' in request.session:
+            email = request.session['email']
+            flow = 'register'
         else:
             messages.error(request, 'Session expired. Please start again.')
             return redirect('register')
@@ -122,9 +154,8 @@ def verify(request):
 
         if user.otp_code == otp:
             user.otp_code = None
-            user.save()
-
             if flow == 'reset':
+                user.save()
                 messages.success(request, 'OTP verified. You can now change your password.')
                 return redirect('changePass')
             else:
@@ -138,6 +169,7 @@ def verify(request):
 
     return render(request, 'verify.html')
 
+# ---------------- CHANGE PASSWORD ----------------
 def changePass(request):
     if request.method == 'POST':
         new_password = request.POST.get('new_password')
@@ -171,6 +203,7 @@ def changePass(request):
 
     return render(request, 'changePass.html')
 
+# ---------------- USER HOME ----------------
 def user_home(request):
     if 'user_id' not in request.session:
         messages.error(request, 'Please log in first.')
@@ -182,6 +215,7 @@ def logout(request):
     messages.success(request, 'You have been logged out successfully.')
     return redirect('login')
 
+# ---------------- BMI CALCULATOR ----------------
 def calculate_bmi(request):
     if request.method == 'POST':
         try:
@@ -236,8 +270,8 @@ def track_progress(request):
 
     user = User.objects.get(id=request.session['user_id'])
     records = user.bmi_records.order_by('created_at')
-    
     return render(request, 'track_progress.html', {'records': records})
+
 def diet_plan(request, status):
     return render(request, 'diet.html', {'status': status})
 
