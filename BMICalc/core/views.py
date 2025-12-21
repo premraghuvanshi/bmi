@@ -4,12 +4,15 @@ from django.core.mail import send_mail
 from django.contrib import messages
 from .models import User, BMIRecord
 import random
-
+# ---------------- HOME  AND ABOUT----------------
 def index(request):
     return render(request, 'index.html')
 
 def about(request):
     return render(request, 'about.html')
+
+
+
 
 # ---------------- REGISTER ----------------
 def register(request):
@@ -36,15 +39,27 @@ def register(request):
             messages.error(request, 'Passwords do not match.')
             return redirect('register')
 
-        # Email uniqueness
+        
         if User.objects.filter(email=email).exists():
             messages.error(request, 'Email is already registered.')
             return redirect('register')
 
-        # Generate OTP
+        
         otp = str(random.randint(100000, 999999))
 
-        # Save user
+        
+        try:
+            send_mail(
+                subject='Your OTP Code for BMI Calculator',
+                message=f'Hello {name},\n\nYour OTP code is: {otp}',
+                from_email='your_email@gmail.com',
+                recipient_list=[email],
+                fail_silently=False,
+            )
+        except Exception as e:
+            messages.error(request, f"Could not send OTP email. Please try again later. ({e})")
+            return redirect('register')
+
         user = User(
             name=name,
             email=email,
@@ -56,21 +71,16 @@ def register(request):
         )
         user.save()
 
-        # Send OTP
-        send_mail(
-            subject='Your OTP Code for BMI Calculator',
-            message=f'Hello {name},\n\nYour OTP code is: {otp}',
-            from_email='your_email@gmail.com',
-            recipient_list=[email],
-            fail_silently=False,
-        )
-
         # Store email in session
         request.session['email'] = email
         messages.success(request, 'Registration successful! Please check your email for OTP.')
         return redirect('verify')
 
     return render(request, 'register.html')
+
+
+
+
 
 # ---------------- LOGIN ----------------
 def login(request):
@@ -102,6 +112,9 @@ def login(request):
 
     return render(request, 'login.html')
 
+
+
+
 # ---------------- FORGET PASSWORD ----------------
 def forget(request):
     if request.method == 'POST':
@@ -117,19 +130,27 @@ def forget(request):
         user.otp_code = otp
         user.save()
 
-        send_mail(
-            subject='Password Reset OTP - BMI Calculator',
-            message=f'Hello,\n\nYour OTP for password reset is: {otp}',
-            from_email='your_email@gmail.com',
-            recipient_list=[email],
-            fail_silently=False,
-        )
+        try:
+            send_mail(
+                subject='Password Reset OTP - BMI Calculator',
+                message=f'Hello,\n\nYour OTP for password reset is: {otp}',
+                from_email='your_email@gmail.com',
+                recipient_list=[email],
+                fail_silently=False,
+            )
+        except Exception as e:
+            messages.error(request, f"Could not send OTP email. Please try again later. ({e})")
+            return redirect('forgetPass')
 
         request.session['reset_email'] = email
         messages.success(request, 'OTP sent to your email.')
         return redirect('verify')
 
     return render(request, 'forget.html')
+
+
+
+
 
 # ---------------- VERIFY OTP ----------------
 def verify(request):
@@ -169,6 +190,10 @@ def verify(request):
 
     return render(request, 'verify.html')
 
+
+
+
+
 # ---------------- CHANGE PASSWORD ----------------
 def changePass(request):
     if request.method == 'POST':
@@ -203,6 +228,10 @@ def changePass(request):
 
     return render(request, 'changePass.html')
 
+
+
+
+
 # ---------------- USER HOME ----------------
 def user_home(request):
     if 'user_id' not in request.session:
@@ -210,10 +239,17 @@ def user_home(request):
         return redirect('login')
     return render(request, 'user.html')
 
+
+
+
+# ----------------LOGOUT USER HOME ----------------
 def logout(request):
     request.session.flush()
     messages.success(request, 'You have been logged out successfully.')
     return redirect('login')
+
+
+
 
 # ---------------- BMI CALCULATOR ----------------
 def calculate_bmi(request):
@@ -263,6 +299,10 @@ def calculate_bmi(request):
 
     return render(request, 'calculate_bmi.html')
 
+
+
+
+# ---------------- TRACK PROGRESS ----------------
 def track_progress(request):
     if 'user_id' not in request.session:
         messages.error(request, "Please log in first.")
@@ -271,6 +311,9 @@ def track_progress(request):
     user = User.objects.get(id=request.session['user_id'])
     records = user.bmi_records.order_by('created_at')
     return render(request, 'track_progress.html', {'records': records})
+
+
+
 
 def diet_plan(request, status):
     return render(request, 'diet.html', {'status': status})
