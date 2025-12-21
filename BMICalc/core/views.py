@@ -21,6 +21,9 @@ def register(request):
         email = request.POST.get('email')
         age = request.POST.get('age')
         gender = request.POST.get('gender')
+        city = request.POST.get('city')  # ✅ new
+        has_condition = request.POST.get('has_condition')  # "Yes" or "No"
+        condition = request.POST.get('condition') if has_condition == 'Yes' else None
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
 
@@ -34,20 +37,30 @@ def register(request):
             messages.error(request, 'Age must be between 15 and 100 years.')
             return redirect('register')
 
+        # Gender required
+        if not gender:
+            messages.error(request, 'Please select your gender.')
+            return redirect('register')
+
+        # City required
+        if not city:
+            messages.error(request, 'Please select your city.')
+            return redirect('register')
+
         # Confirm password
         if password != confirm_password:
             messages.error(request, 'Passwords do not match.')
             return redirect('register')
 
-        
+        # Email uniqueness
         if User.objects.filter(email=email).exists():
             messages.error(request, 'Email is already registered.')
             return redirect('register')
 
-        
+        # Generate OTP
         otp = str(random.randint(100000, 999999))
 
-        
+        # Send OTP
         try:
             send_mail(
                 subject='Your OTP Code for BMI Calculator',
@@ -60,12 +73,16 @@ def register(request):
             messages.error(request, f"Could not send OTP email. Please try again later. ({e})")
             return redirect('register')
 
+        # Save user
         user = User(
             name=name,
             email=email,
             password=make_password(password),
             age=age,
             gender=gender,
+            city=city,  # ✅ required
+            has_condition=(has_condition == 'Yes'),  # ✅ optional toggle
+            condition=condition,  # ✅ optional
             otp_code=otp,
             is_verified=False
         )

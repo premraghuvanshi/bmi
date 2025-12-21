@@ -15,6 +15,31 @@ class User(models.Model):
     otp_code = models.CharField(max_length=6, blank=True, null=True)
     is_verified = models.BooleanField(default=False)
 
+    # ✅ City is required
+    city = models.CharField(
+        max_length=50,
+        choices=[
+            ('Indore', 'Indore'),
+            ('Khargone', 'Khargone'),
+            ('Bhopal', 'Bhopal'),
+            ('Khandwa', 'Khandwa'),
+        ],
+        null=True,  
+        blank=True   
+    )
+
+    # ✅ Health condition fields (optional)
+    has_condition = models.BooleanField(default=False)
+    condition = models.CharField(
+        max_length=50,
+        choices=[
+            ('Diabetes', 'Diabetes'),
+            ('Blood Pressure', 'Blood Pressure'),
+        ],
+        null=True,
+        blank=True
+    )
+
     def __str__(self):
         return self.name
 
