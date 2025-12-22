@@ -20,6 +20,8 @@ urlpatterns = [
     path('calculate_bmi/', views.calculate_bmi, name='calculate_bmi'),
     path('track_progress/', views.track_progress, name='track_progress'),
     path('diet/<str:status>/', views.diet_plan, name='diet_plan'),
+    path('diet_diabetes/<str:status>/', views.diet_diabetes, name='diet_diabetes'),
+    path('diet_bp/<str:status>/', views.diet_bp, name='diet_bp'),
     path('workout/<str:status>/', views.workout_plan, name='workout_plan'),
 
 

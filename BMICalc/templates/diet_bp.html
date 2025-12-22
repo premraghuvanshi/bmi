@@ -1,0 +1,236 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Diet Plan - BMI Calculator</title>
+  {% include "fevicon.html" %}
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #003366, #2ecc71);
+      min-height: 100vh;
+      color: #333;
+      margin: 0;
+    }
+
+    /* Slim nav bar */
+    nav {
+      background: linear-gradient(90deg, #003366, #005f8e);
+      color: #fff;
+      padding: 8px 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    nav h1 { font-size: 1.2rem; font-weight: 600; color: #fff; }
+    nav ul { list-style: none; display: flex; gap: 15px; }
+    nav ul li a {
+      text-decoration: none;
+      color: #fff;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: color 0.3s ease;
+    }
+    nav ul li a:hover { color: #2ecc71; }
+
+    .container {
+      max-width: 1100px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #003366;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    /* 3×2 matrix for 6 items */
+    .diet-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .food-card {
+      background: #f9f9f9;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      text-align: center;
+      padding: 15px;
+    }
+    .food-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .food-card h3 { margin: 10px 0; color: #005f8e; }
+    .food-card h3 a { text-decoration: none; color: #005f8e; }
+    .food-card h3 a:hover { color: #2ecc71; }
+    .nutrition { font-size: 14px; text-align: left; margin-top: 10px; color: #333; }
+    .nutrition p { margin: 4px 0; }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav>
+    <h1>BMI System</h1>
+    <ul>
+      <li><a href="{% url 'user' %}">User Home</a></li>
+      <li><a href="{% url 'track_progress' %}">Track Progress</a></li>
+      <li><a href="{% url 'workout_plan' status %}">View Workout</a></li>
+      <li><a href="{% url 'logout' %}">Logout</a></li>
+    </ul>
+  </nav>
+
+  <!-- Diet Plan -->
+  <div class="container">
+    <h2>Diet Plan for {{ status }}</h2>
+
+    <div class="diet-container">
+  {% if status == "Underweight" %}
+    <!-- Underweight (BP-focused; low sodium; 1 non-veg; 0 reused) -->
+    <div class="food-card">
+      <img src="{% static 'images/ragi_roti_veg_curry.jpg' %}" alt="Ragi Roti with Vegetable Curry">
+      <h3><a href="https://www.google.com/search?q=Ragi+Roti+Vegetable+Curry" target="_blank">Ragi Roti + Vegetable Curry</a></h3>
+      <div class="nutrition"><p>Protein: 9 g</p><p>Calories: 280 kcal</p><p>Quantity: 2 roti + curry / 250 g</p></div>
+    </div>
+    <div class="food-card">
+      <img src="{% static 'images/palak_chana_curry.jpg' %}" alt="Palak Chana Curry">
+      <h3><a href="https://www.google.com/search?q=Palak+Chana+Curry" target="_blank">Palak Chana Curry (low salt)</a></h3>
+      <div class="nutrition"><p>Protein: 14 g</p><p>Calories: 260 kcal</p><p>Quantity: 1 bowl / 220 g</p></div>
+    </div>
+    <div class="food-card">
+      <img src="{% static 'images/egg_white_omelette.jpg' %}" alt="Egg White Omelette">
+      <h3><a href="https://www.google.com/search?q=Egg+White+Omelette" target="_blank">Egg White Omelette (no added salt)</a></h3>
+      <div class="nutrition"><p>Protein: 11 g</p><p>Calories: 150 kcal</p><p>Quantity: 2 egg whites / ~100 g</p></div>
+    </div>
+    <div class="food-card">
+      <img src="{% static 'images/vegetable_upma_low_salt.jpg' %}" alt="Vegetable Upma Low Salt">
+      <h3><a href="https://www.google.com/search?q=Vegetable+Upma+low+salt" target="_blank">Vegetable Upma (low salt)</a></h3>
+      <div class="nutrition"><p>Protein: 7 g</p><p>Calories: 230 kcal</p><p>Quantity: 1 bowl / 200 g</p></div>
+    </div>
+    <div class="food-card">
+      <img src="{% static 'images/curd_cucumber.jpg' %}" alt="Curd and Cucumber">
+      <h3><a href="https://www.google.com/search?q=Curd+Cucumber" target="_blank">Low-fat Curd + Cucumber</a></h3>
+      <div class="nutrition"><p>Protein: 8 g</p><p>Calories: 140 kcal</p><p>Quantity: 1 cup / 250 ml</p></div>
+    </div>
+    <div class="food-card">
+      <img src="{% static 'images/kala_chana_curry.jpg' %}" alt="Kala Chana Curry">
+      <h3><a href="https://www.google.com/search?q=Kala+Chana+Curry+low+salt" target="_blank">Kala Chana Curry (low salt)</a></h3>
+      <div class="nutrition"><p>Protein: 15 g</p><p>Calories: 250 kcal</p><p>Quantity: 1 bowl / 200 g</p></div>
+    </div>
+
+  {% elif status == "Normal" %}
+    <!-- Normal (BP-focused; low sodium; 1 non-veg; 2 reused: Palak Dal, Masoor Dal Soup) -->
+    <div class="food-card">
+      <img src="{% static 'images/brown_rice_sambar.jpg' %}" alt="Brown Rice with Sambar">
+      <h3><a href="https://www.google.com/search?q=Brown+Rice+Sambar+low+salt" target="_blank">Brown Rice + Sambar (low salt)</a></h3>
+      <div class="nutrition"><p>Protein: 12 g</p><p>Calories: 320 kcal</p><p>Quantity: 1 plate / 300 g</p></div>
+    </div>
+    <div class="food-card">
+      <img src="{% static 'images/palak_dal.jpg' %}" alt="Palak Dal">
+      <h3><a href="https://www.google.com/search?q=Palak+Dal" target="_blank">Palak Dal (Spinach + Arhar Dal)</a></h3>
+      <div class="nutrition"><p>Protein: 14 g</p><p>Calories: 230 kcal</p><p>Quantity: 1 bowl / 220 g</p></div>
+    </div>
+    <div class="food-card">
+      <img src="{% static 'images/grilled_chicken_breast_no_oil.jpg' %}" alt="Grilled Chicken Breast No Oil">
+      <h3><a href="https://www.google.com/search?q=Grilled+Chicken+Breast+no+oil" target="_blank">Grilled Chicken Breast (no oil, no salt)</a></h3>
+      <div class="nutrition"><p>Protein: 28 g</p><p>Calories: 280 kcal</p><p>Quantity: 1 portion / 150 g</p></div>
+    </div>
+    <div class="food-card">
+      <img src="{% static 'images/vegetable_dhokla.jpg' %}" alt="Vegetable Dhokla">
+      <h3><a href="https://www.google.com/search?q=Vegetable+Dhokla+healthy" target="_blank">Vegetable Dhokla (steamed)</a></h3>
+      <div class="nutrition"><p>Protein: 9 g</p><p>Calories: 200 kcal</p><p>Quantity: 3 pieces / 150 g</p></div>
+    </div>
+    <div class="food-card">
+      <img src="{% static 'images/methi_dal.jpg' %}" alt="Methi Dal">
+      <h3><a href="https://www.google.com/search?q=Methi+Dal+low+salt" target="_blank">Methi Dal (low salt)</a></h3>
+      <div class="nutrition"><p>Protein: 13 g</p><p>Calories: 240 kcal</p><p>Quantity: 1 bowl / 220 g</p></div>
+    </div>
+    <div class="food-card">
+      <img src="{% static 'images/masoor_dal_soup.jpg' %}" alt="Masoor Dal Soup">
+      <h3><a href="https://www.google.com/search?q=Masoor+Dal+Soup+low+salt" target="_blank">Masoor Dal Soup (low salt)</a></h3>
+      <div class="nutrition"><p>Protein: 12 g</p><p>Calories: 180 kcal</p><p>Quantity: 1 bowl / 250 ml</p></div>
+    </div>
+
+  {% elif status == "Overweight" %}
+    <!-- Overweight (BP-focused; all vegetarian; 2 reused: Lauki Soup, Cucumber Tomato Raita) -->
+    <div class="food-card">
+      <img src="{% static 'images/bottle_gourd_curry.jpg' %}" alt="Bottle Gourd Curry">
+      <h3><a href="https://www.google.com/search?q=Bottle+Gourd+Curry+low+salt" target="_blank">Bottle Gourd Curry (low salt)</a></h3>
+      <div class="nutrition"><p>Protein: 5 g</p><p>Calories: 120 kcal</p><p>Quantity: 1 bowl / 200 g</p></div>
+    </div>
+    <div class="food-card">
+      <img src="{% static 'images/lauki_soup.jpg' %}" alt="Lauki Soup">
+      <h3><a href="https://www.google.com/search?q=Lauki+Soup+low+salt" target="_blank">Lauki (Bottle Gourd) Soup</a></h3>
+      <div class="nutrition"><p>Protein: 3 g</p><p>Calories: 90 kcal</p><p>Quantity: 1 bowl / 250 ml</p></div>
+    </div>
+    <div class="food-card">
+      <img src="{% static 'images/jowar_idli.jpg' %}" alt="Jowar Idli">
+      <h3><a href="https://www.google.com/search?q=Jowar+Idli" target="_blank">Jowar (Sorghum) Idli</a></h3>
+      <div class="nutrition"><p>Protein: 7 g</p><p>Calories: 180 kcal</p><p>Quantity: 3 idli / 150 g</p></div>
+    </div>
+    <div class="food-card">
+      <img src="{% static 'images/cucumber_tomato_raita.jpg' %}" alt="Cucumber Tomato Raita">
+      <h3><a href="https://www.google.com/search?q=Cucumber+Tomato+Raita+low+salt" target="_blank">Cucumber + Tomato Raita (low-fat)</a></h3>
+      <div class="nutrition"><p>Protein: 6 g</p><p>Calories: 120 kcal</p><p>Quantity: 1 bowl / 200 ml</p></div>
+    </div>
+    <div class="food-card">
+      <img src="{% static 'images/moong_dal_cheela.jpg' %}" alt="Moong Dal Cheela">
+      <h3><a href="https://www.google.com/search?q=Moong+Dal+Cheela" target="_blank">Moong Dal Cheela (no oil)</a></h3>
+      <div class="nutrition"><p>Protein: 10 g</p><p>Calories: 190 kcal</p><p>Quantity: 2 cheela / 160 g</p></div>
+    </div>
+    <div class="food-card">
+      <img src="{% static 'images/spinach_corn_stir.jpg' %}" alt="Spinach Corn Stir-fry">
+      <h3><a href="https://www.google.com/search?q=Spinach+Corn+stir+fry+no+salt" target="_blank">Spinach + Corn Stir-fry (no added salt)</a></h3>
+      <div class="nutrition"><p>Protein: 6 g</p><p>Calories: 160 kcal</p><p>Quantity: 1 plate / 200 g</p></div>
+    </div>
+
+  {% elif status == "Obese" %}
+    <!-- Obese (BP-focused; low sodium; 1 non-veg; 1 reused: Sprouted Horse Gram Salad; 1 reused: Ragi Idli) -->
+    <div class="food-card">
+      <img src="{% static 'images/steamed_ridgegourd_zucchini.jpg' %}" alt="Steamed Ridge Gourd and Zucchini">
+      <h3><a href="https://www.google.com/search?q=Steamed+Ridge+Gourd+Zucchini" target="_blank">Steamed Ridge Gourd + Zucchini</a></h3>
+      <div class="nutrition"><p>Protein: 4 g</p><p>Calories: 110 kcal</p><p>Quantity: 1 bowl / 200 g</p></div>
+    </div>
+    <div class="food-card">
+      <img src="{% static 'images/clear_vegetable_soup.jpg' %}" alt="Clear Vegetable Soup">
+      <h3><a href="https://www.google.com/search?q=Clear+Vegetable+Soup+low+salt" target="_blank">Clear Vegetable Soup (no salt)</a></h3>
+      <div class="nutrition"><p>Protein: 4 g</p><p>Calories: 100 kcal</p><p>Quantity: 1 bowl / 250 ml</p></div>
+    </div>
+    <div class="food-card">
+      <img src="{% static 'images/steamed_fish_herbs.jpg' %}" alt="Steamed Fish with Herbs">
+      <h3><a href="https://www.google.com/search?q=Steamed+Fish+herbs+no+salt" target="_blank">Steamed Fish Fillet (herbs, no salt)</a></h3>
+      <div class="nutrition"><p>Protein: 25 g</p><p>Calories: 210 kcal</p><p>Quantity: 1 fillet / 120 g</p></div>
+    </div>
+    <div class="food-card">
+      <img src="{% static 'images/kulthi_sprouts_salad.jpg' %}" alt="Sprouted Horse Gram Salad">
+      <h3><a href="https://www.google.com/search?q=Horse+Gram+Sprouts+Salad" target="_blank">Sprouted Horse Gram (Kulthi) Salad</a></h3>
+      <div class="nutrition"><p>Protein: 14 g</p><p>Calories: 210 kcal</p><p>Quantity: 1 bowl / 200 g</p></div>
+    </div>
+    <div class="food-card">
+      <img src="{% static 'images/ragi_idli.jpg' %}" alt="Ragi Idli">
+      <h3><a href="https://www.google.com/search?q=Ragi+Idli" target="_blank">Ragi Idli (no oil)</a></h3>
+      <div class="nutrition"><p>Protein: 8 g</p><p>Calories: 200 kcal</p><p>Quantity: 3 idli / 150 g</p></div>
+    </div>
+    <div class="food-card">
+      <img src="{% static 'images/oats_veg_porridge.jpg' %}" alt="Oats Vegetable Porridge">
+      <h3><a href="https://www.google.com/search?q=Oats+Vegetable+Porridge+no+salt" target="_blank">Oats + Vegetable Porridge (no salt)</a></h3>
+      <div class="nutrition"><p>Protein: 7 g</p><p>Calories: 190 kcal</p><p>Quantity: 1 bowl / 250 ml</p></div>
+    </div>
+  {% endif %}
+</div>
+  </div>
+
+</body>
+</html>

@@ -293,6 +293,7 @@ def calculate_bmi(request):
             else:
                 status = "Obese"
 
+            user_condition = None
             if 'user_id' in request.session:
                 user = User.objects.get(id=request.session['user_id'])
                 BMIRecord.objects.create(
@@ -302,13 +303,16 @@ def calculate_bmi(request):
                     bmi=bmi,
                     status=status
                 )
+                # ✅ capture condition from user model
+                user_condition = user.condition  
 
             messages.success(request, f'Your BMI was calculated successfully: {bmi} ({status}).')
             return render(request, 'calculate_bmi.html', {
                 'bmi': bmi,
                 'status': status,
                 'height': height,
-                'weight': weight
+                'weight': weight,
+                'condition': user_condition  # ✅ pass condition to template
             })
         except ValueError:
             messages.error(request, "Invalid input. Please enter numbers only.")
@@ -334,6 +338,15 @@ def track_progress(request):
 
 def diet_plan(request, status):
     return render(request, 'diet.html', {'status': status})
+
+def diet_diabetes(request, status):
+    
+    return render(request, 'diet_diabetes.html', {'status': status})
+
+def diet_bp(request, status):
+    
+    return render(request, 'diet_bp.html', {'status': status})
+
 
 def workout_plan(request, status):
     return render(request, 'workout.html', {'status': status})
