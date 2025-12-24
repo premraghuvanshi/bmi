@@ -1,0 +1,288 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+   <style>
+    @page { size: a4; margin: 1cm; }
+    body { font-family: Helvetica, sans-serif; color: #333; line-height: 1.4; font-size: 10px; }
+    .header { text-align: center; border-bottom: 2px solid #003366; padding-bottom: 10px; }
+    
+    /* 1. GENERAL TABLE STYLE (Profile, Specialist, Schedule) - INCREASED FONT SIZE */
+    .info-table, .inner-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    .info-table td, .inner-table td { 
+        padding: 4px; 
+        border: 1px solid #eee; 
+        font-size: 10px; /* INCREASED FROM 9px TO 10px */
+        vertical-align: middle; 
+    }
+    .inner-table th { 
+        background: #f2f2f2; 
+        padding: 4px; 
+        text-align: left; 
+        border-bottom: 1px solid #ccc;
+        font-size: 10px; /* INCREASED FROM 9px TO 10px */
+    }
+
+    /* 2. SPECIFIC STYLE FOR DIET & WORKOUT - REMAINS 9px BUT BOTTOM-SET */
+    .plan-table { width: 100%; border-collapse: collapse; }
+    .plan-table th { 
+        background: #f2f2f2; 
+        border-bottom: 1px solid #ccc; 
+        padding: 6px 5px 2px 5px; 
+        text-align: left; 
+        font-size: 10px; 
+        vertical-align: bottom;
+    }
+    .plan-table td { 
+        border-bottom: 1px solid #eee; 
+        padding: 6px 5px 2px 5px; 
+        font-size: 10px; 
+        vertical-align: bottom;
+        height: 18px;
+    }
+
+    .section-head { background: #003366; color: white; padding: 5px 10px; margin-top: 15px; font-weight: bold; text-transform: uppercase; font-size: 11px; }
+    
+    .plan-container { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; }
+    .plan-container td { width: 50%; vertical-align: top; border: 1px solid #ccc; padding: 0; }
+    
+    .col-title { background: #f8f9fa; padding: 5px; font-weight: bold; text-align: center; border-bottom: 1px solid #ccc; color: #003366; font-size: 11px; }
+    .status-box { background: #f0f4f8; padding: 8px; text-align: center; margin-top: 10px; border: 1px solid #003366; }
+    .highlight { color: #2ecc71; font-weight: bold; }
+</style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>BMI CALCULATOR & HEALTH INSTRUCTOR SYSTEM</h1>
+        <p>Personalized Health Analysis & Recommendations</p>
+    </div>
+
+    <div class="section-head">User Profile</div>
+    <table class="info-table">
+        <tr>
+            <td><strong>Name:</strong> {{ user.name }}</td>
+            <td><strong>Email:</strong> {{ user.email }}</td>
+        </tr>
+        <tr>
+            <td><strong>Age / Gender:</strong> {{ user.age }} / {{ user.gender }}</td>
+            <td><strong>Location:</strong> {{ user.city }}</td>
+        </tr>
+        <tr>
+            <td><strong>Medical Condition:</strong> {{ condition }}</td>
+            <td><strong>Current Status:</strong> <span class="highlight">{{ status }}</span></td>
+        </tr>
+    </table>
+
+    <div class="status-box">
+        <h3 style="margin:0;">LATEST BMI SCORE: {{ record.bmi }}</h3>
+    </div>
+
+    <div class="section-head">Personalized Health Instructor Plan</div>
+    <table class="plan-container">
+            <td>
+                <div class="col-title">DIET PLAN ({{ condition }})</div>
+                <table class="plan-table"> <tr><th>Food Item</th><th>Calories</th><th>Protein</th><th>Qty</th></tr>
+                    
+                    {% if condition == "Diabetes" %}
+                        {% if status == "Underweight" %}
+                            <tr><td>Ragi Kanji</td><td>220 kcal</td><td>6g</td><td>250 ml</td></tr>
+                            <tr><td>Paneer Bhurji + Bajra Roti</td><td>350 kcal</td><td>20g</td><td>150g</td></tr>
+                            <tr><td>Sprouted Moong Salad</td><td>220 kcal</td><td>12g</td><td>200g</td></tr>
+                            <tr><td>Egg Curry</td><td>190 kcal</td><td>12g</td><td>100g</td></tr>
+                            <tr><td>Vegetable Dalia</td><td>240 kcal</td><td>8g</td><td>250g</td></tr>
+                            <tr><td>Soybean Curry</td><td>260 kcal</td><td>15g</td><td>200g</td></tr>
+                        {% elif status == "Normal" %}
+                            <tr><td>Bajra Khichdi</td><td>260 kcal</td><td>10g</td><td>250g</td></tr>
+                            <tr><td>Palak Dal</td><td>230 kcal</td><td>14g</td><td>220g</td></tr>
+                            <tr><td>Grilled Fish Tikka</td><td>220 kcal</td><td>26g</td><td>120g</td></tr>
+                            <tr><td>Cucumber Tomato Raita</td><td>120 kcal</td><td>6g</td><td>200ml</td></tr>
+                            <tr><td>Masoor Dal Soup</td><td>180 kcal</td><td>12g</td><td>250ml</td></tr>
+                            <tr><td>Vegetable Handvo</td><td>240 kcal</td><td>10g</td><td>180g</td></tr>
+                        {% elif status == "Overweight" %}
+                            <tr><td>Karela Sabzi</td><td>120 kcal</td><td>3g</td><td>200g</td></tr>
+                            <tr><td>Lauki Soup</td><td>90 kcal</td><td>3g</td><td>250ml</td></tr>
+                            <tr><td>Sprouted Chana Sundal</td><td>210 kcal</td><td>12g</td><td>200g</td></tr>
+                            <tr><td>Methi Thepla</td><td>220 kcal</td><td>7g</td><td>120g</td></tr>
+                            <tr><td>Vegetable Ragi Idli</td><td>200 kcal</td><td>8g</td><td>150g</td></tr>
+                            <tr><td>Palak + Mushroom Stir Fry</td><td>170 kcal</td><td>9g</td><td>200g</td></tr>
+                        {% elif status == "Obese" %}
+                            <tr><td>Steamed Mixed Veg</td><td>140 kcal</td><td>5g</td><td>200g</td></tr>
+                            <tr><td>Clear Tomato Rasam</td><td>90 kcal</td><td>3g</td><td>250ml</td></tr>
+                            <tr><td>Baked Fish</td><td>220 kcal</td><td>26g</td><td>120g</td></tr>
+                            <tr><td>Sprouted Horse Gram Salad</td><td>210 kcal</td><td>14g</td><td>200g</td></tr>
+                            <tr><td>Vegetable Oats Cheela</td><td>200 kcal</td><td>9g</td><td>160g</td></tr>
+                            <tr><td>Palak Soup</td><td>120 kcal</td><td>4g</td><td>250ml</td></tr>
+                        {% endif %}
+
+                    {% elif condition == "Blood Pressure" %}
+                        {% if status == "Underweight" %}
+                            <tr><td>Ragi Roti + Veg Curry</td><td>280 kcal</td><td>9g</td><td>250g</td></tr>
+                            <tr><td>Palak Chana Curry</td><td>260 kcal</td><td>14g</td><td>220g</td></tr>
+                            <tr><td>Egg White Omelette</td><td>150 kcal</td><td>11g</td><td>100g</td></tr>
+                            <tr><td>Vegetable Upma</td><td>230 kcal</td><td>7g</td><td>200g</td></tr>
+                            <tr><td>Low-fat Curd + Cucumber</td><td>140 kcal</td><td>8g</td><td>250ml</td></tr>
+                            <tr><td>Kala Chana Curry</td><td>250 kcal</td><td>15g</td><td>200g</td></tr>
+                        {% elif status == "Normal" %}
+                            <tr><td>Brown Rice + Sambar</td><td>320 kcal</td><td>12g</td><td>300g</td></tr>
+                            <tr><td>Palak Dal</td><td>230 kcal</td><td>14g</td><td>220g</td></tr>
+                            <tr><td>Grilled Chicken Breast</td><td>280 kcal</td><td>28g</td><td>150g</td></tr>
+                            <tr><td>Vegetable Dhokla</td><td>200 kcal</td><td>9g</td><td>150g</td></tr>
+                            <tr><td>Methi Dal</td><td>240 kcal</td><td>13g</td><td>220g</td></tr>
+                            <tr><td>Masoor Dal Soup</td><td>180 kcal</td><td>12g</td><td>250ml</td></tr>
+                        {% elif status == "Overweight" %}
+                            <tr><td>Bottle Gourd Curry</td><td>120 kcal</td><td>5g</td><td>200g</td></tr>
+                            <tr><td>Lauki Soup</td><td>90 kcal</td><td>3g</td><td>250ml</td></tr>
+                            <tr><td>Jowar Idli</td><td>180 kcal</td><td>7g</td><td>150g</td></tr>
+                            <tr><td>Cucumber Tomato Raita</td><td>120 kcal</td><td>6g</td><td>200ml</td></tr>
+                            <tr><td>Moong Dal Cheela</td><td>190 kcal</td><td>10g</td><td>160g</td></tr>
+                            <tr><td>Spinach + Corn Stir-fry</td><td>160 kcal</td><td>6g</td><td>200g</td></tr>
+                        {% elif status == "Obese" %}
+                            <tr><td>Steamed Gourd + Zucchini</td><td>110 kcal</td><td>4g</td><td>200g</td></tr>
+                            <tr><td>Clear Vegetable Soup</td><td>100 kcal</td><td>4g</td><td>250ml</td></tr>
+                            <tr><td>Steamed Fish Fillet</td><td>210 kcal</td><td>25g</td><td>120g</td></tr>
+                            <tr><td>Sprouted Horse Gram Salad</td><td>210 kcal</td><td>14g</td><td>200g</td></tr>
+                            <tr><td>Ragi Idli</td><td>200 kcal</td><td>8g</td><td>150g</td></tr>
+                            <tr><td>Oats + Veg Porridge</td><td>190 kcal</td><td>7g</td><td>250ml</td></tr>
+                        {% endif %}
+
+                    {% else %} {% if status == "Underweight" %}
+                            <tr><td>Oatmeal </td><td>311 kcal</td><td>13g</td><td>80g</td></tr>
+                            <tr><td>Banana Smoothie</td><td>225 kcal</td><td>3g</td><td>250g</td></tr>
+                            <tr><td>Eggs</td><td>143 kcal</td><td>13g</td><td>100g</td></tr>
+                            <tr><td>Chicken Curry</td><td>550 kcal</td><td>45g</td><td>250g</td></tr>
+                            <tr><td>Mixed Nuts</td><td>243 kcal</td><td>8g</td><td>40g</td></tr>
+                            <tr><td>Milk</td><td>153 kcal</td><td>8g</td><td>250g</td></tr>
+                        {% elif status == "Normal" %}
+                            <tr><td>Grilled Fish</td><td>420 kcal</td><td>25g</td><td>200g</td></tr>
+                            <tr><td>Fruit Salad</td><td>180 kcal</td><td>2g</td><td>200g</td></tr>
+                            <tr><td>Veggies Stir-fry</td><td>250 kcal</td><td>6g</td><td>200g</td></tr>
+                            <tr><td>Yogurt/Curd</td><td>118 kcal</td><td>20g</td><td>200g</td></tr>
+                            <tr><td>Chicken Salad</td><td>300 kcal</td><td>28g</td><td>200g</td></tr>
+                            <tr><td>Veggies Soup</td><td>150 kcal</td><td>5g</td><td>200g</td></tr>
+                        {% elif status == "Overweight" %}
+                            <tr><td>Lentil Soup</td><td>220 kcal</td><td>14g</td><td>200g</td></tr>
+                            <tr><td>Grilled Chicken</td><td>300 kcal</td><td>28g</td><td>200g</td></tr>
+                            <tr><td>Quinoa Bowl</td><td>280 kcal</td><td>9g</td><td>200g</td></tr>
+                            <tr><td>Green Smoothie</td><td>200 kcal</td><td>5g</td><td>250g</td></tr>
+                            <tr><td>Wheat Roti + Sabzi</td><td>350 kcal</td><td>12g</td><td>200g</td></tr>
+                            <tr><td>Steamed Beans</td><td>120 kcal</td><td>8g</td><td>200g</td></tr>
+                        {% elif status == "Obese" %}
+                            <tr><td>Steamed Vegetables</td><td>150 kcal</td><td>6g</td><td>200g</td></tr>
+                            <tr><td>Baked Fish</td><td>300 kcal</td><td>36g</td><td>150g</td></tr>
+                            <tr><td>Mixed Sprouts</td><td>200 kcal</td><td>12g</td><td>200g</td></tr>
+                            <tr><td>Veggies Soup</td><td>120 kcal</td><td>4g</td><td>200g</td></tr>
+                            <tr><td>Grilled Chicken</td><td>285 kcal</td><td>46g</td><td>150g</td></tr>
+                            <tr><td>Veggies Salad</td><td>260 kcal</td><td>8g</td><td>200g</td></tr>
+                        {% endif %}
+                    {% endif %}
+                </table>
+            </td>
+
+            <td>
+                <div class="col-title">WORKOUT PLAN ({{ status }})</div>
+                <table class="plan-table"> <tr><th>Exercise</th><th>Sets/Reps</th><th>Target</th></tr>
+                    {% if status == "Underweight" %}
+                        <tr><td>Push Ups</td><td>3 x 12-15</td><td>Chest, Triceps</td></tr>
+                        <tr><td>Bodyweight Squats</td><td>3 x 15-20</td><td>Quads, Glutes</td></tr>
+                        <tr><td>Plank</td><td>3 x 30-45s</td><td>Core</td></tr>
+                        <tr><td>Forward Lunges</td><td>3 x 12/leg</td><td>Quads, Glutes</td></tr>
+                        <tr><td>Burpees</td><td>3 x 10-12</td><td>Full Body</td></tr>
+                        <tr><td>Crunches</td><td>3 x 15-20</td><td>Abs</td></tr>
+                    {% elif status == "Normal" %}
+                        <tr><td>Diamond Push Ups</td><td>4 x 10-12</td><td>Chest, Triceps</td></tr>
+                        <tr><td>Jumping Jacks</td><td>4 x 40-60</td><td>Full Body</td></tr>
+                        <tr><td>Mountain Climbers</td><td>3 x 40-60</td><td>Core, Cardio</td></tr>
+                        <tr><td>Split Squats</td><td>3 x 12-15/leg</td><td>Legs, Glutes</td></tr>
+                        <tr><td>Pike Push Ups</td><td>3 x 8-10</td><td>Shoulders</td></tr>
+                        <tr><td>Bicycle Crunches</td><td>3 x 20-30</td><td>Abs</td></tr>
+                    {% elif status == "Overweight" %}
+                        <tr><td>March in Place</td><td>3 x 60-90s</td><td>Cardio, Hips</td></tr>
+                        <tr><td>Wall Push Ups</td><td>3 x 12-15</td><td>Chest, Triceps</td></tr>
+                        <tr><td>Half Squats</td><td>3 x 12-15</td><td>Quads, Glutes</td></tr>
+                        <tr><td>Standing Knee Raises</td><td>3 x 12-15</td><td>Core</td></tr>
+                        <tr><td>Bird Dog</td><td>3 x 10-12</td><td>Back, Core</td></tr>
+                        <tr><td>Step Jacks</td><td>3 x 40-60</td><td>Full Body</td></tr>
+                    {% elif status == "Obese" %}
+                        <tr><td>Wall Push Ups</td><td>3 x 8-12</td><td>Chest, Triceps</td></tr>
+                        <tr><td>Wall Sit</td><td>3 x 20-40s</td><td>Legs, Glutes</td></tr>
+                        <tr><td>Seated Leg Raises</td><td>3 x 10-12/leg</td><td>Core</td></tr>
+                        <tr><td>Side Leg Raises</td><td>3 x 10-12</td><td>Hips, Glutes</td></tr>
+                        <tr><td>Glute Bridge</td><td>3 x 10-15</td><td>Glutes, Core</td></tr>
+                        <tr><td>Standing Calf Raises</td><td>3 x 12-15</td><td>Calves</td></tr>
+                    {% endif %}
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <div class="section-head">Medical Specialist Recommendations</div>
+<p style="font-size: 9px; margin-bottom: 5px;">Based on your current profile, we recommend consulting the following specialists in <strong>{{ user.city }}</strong>:</p>
+
+<table class="inner-table" style="border: 1px solid #ccc;">
+    <tr style="background: #f4f4f4;">
+        <th style="width: 30%;">Doctor Name</th>
+        <th style="width: 25%;">Specialty</th>
+        <th style="width: 25%;">Category Match</th>
+        <th style="width: 20%;">Availability</th>
+    </tr>
+    {% for s in specialists %}
+    <tr>
+        <td>{{ s.name }}</td>
+        <td>{{ s.specialty }}</td>
+        <td>
+            {% if s.specialist_type == "General" %} Genral Physician
+            {% elif s.specialist_type == "Diabetes" %} Diabetes
+            {% elif s.specialist_type == "Blood Pressure" %} Blood Pressure
+            {% elif s.specialist_type == "Overweight" %} Overweight
+            {% elif s.specialist_type == "Underweight" %} Underweight 
+            {% endif %}
+        </td>
+        <td>{{ s.availability }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="4" style="text-align: center; padding: 10px;">
+            No specific specialists found for your profile in {{ user.city }}. 
+            Please consult a general physician.
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+    <div class="section-head">Daily Routine Schedule</div>
+    <table class="inner-table" style="margin-top: 10px; border: 1px solid #ccc;">
+        <tr style="background: #f4f4f4;">
+            <th>Time Slot</th>
+            <th>Activity</th>
+        </tr>
+        {% if status == "Underweight" %}
+            <tr><td>07:00 AM</td><td>Heavy breakfast</td></tr>
+            <tr><td>10:00 AM</td><td>Mid-morning snack</td></tr>
+            <tr><td>01:00 PM</td><td>Balanced lunch</td></tr>
+            <tr><td>04:00 PM</td><td>Energy snack</td></tr>
+            <tr><td>07:00 PM</td><td>Strength workout</td></tr>
+            <tr><td>08:00 PM</td><td>Light dinner</td></tr>
+            <tr><td>10:00 PM</td><td>Bedtime snack</td></tr>
+        {% elif status == "Normal" %}
+            <tr><td>07:30 AM</td><td>Moderate breakfast</td></tr>
+            <tr><td>01:30 PM</td><td>Balanced lunch</td></tr>
+            <tr><td>04:00 PM</td><td>Light snack</td></tr>
+            <tr><td>06:30 PM</td><td>Evening workout</td></tr>
+            <tr><td>08:00 PM</td><td>Light dinner</td></tr>
+        {% elif status == "Overweight" %}
+            <tr><td>07:30 AM</td><td>Light breakfast</td></tr>
+            <tr><td>12:30 PM</td><td>Controlled lunch</td></tr>
+            <tr><td>03:30 PM</td><td>Healthy snack</td></tr>
+            <tr><td>06:30 PM</td><td>Cardio workout</td></tr>
+            <tr><td>08:00 PM</td><td>Very light dinner</td></tr>
+        {% elif status == "Obese" %}
+            <tr><td>08:00 AM</td><td>Very light breakfast</td></tr>
+            <tr><td>01:00 PM</td><td>Small lunch</td></tr>
+            <tr><td>05:00 PM</td><td>Light snack</td></tr>
+            <tr><td>07:00 PM</td><td>Gentle workout</td></tr>
+            <tr><td>08:30 PM</td><td>Soup-style dinner</td></tr>
+        {% endif %}
+    </table>
+</body>
+</html>

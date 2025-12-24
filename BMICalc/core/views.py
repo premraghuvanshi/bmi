@@ -436,3 +436,80 @@ def specialist_bot(request):
     }
     return render(request, "bot.html", context)
 
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from xhtml2pdf import pisa
+from .models import User, BMIRecord, Specialist
+
+def download_report(request):
+    # 1. Check for manual session
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return HttpResponse("Unauthorized: Please log in first.", status=401)
+
+    try:
+        # 2. Fetch User and latest BMI Record
+        current_user = User.objects.get(id=user_id)
+        latest_record = BMIRecord.objects.filter(user=current_user).latest('created_at')
+        
+        # 3. Define Variables
+        status = latest_record.status  # Underweight, Normal, Overweight, Obese
+        # Normalize condition to "No" if it is empty or None
+        condition = current_user.condition if current_user.condition and current_user.condition != "None" else "No"
+        user_city = current_user.city
+        
+        # 4. Specialist Filtering Logic (Strict Requirement Match)
+        search_categories = []
+        
+        if status == "Normal":
+            if condition == "No":
+                # Scenario: Normal and No Condition -> General
+                search_categories.append("General")
+            else:
+                # Scenario: Normal but has condition -> Condition based only
+                search_categories.append(condition)
+        else:
+            # Scenario: Weight issue (Underweight, Overweight, Obese)
+            
+            # Map Obese to Overweight for specialist matching
+            weight_tag = "Overweight" if status == "Obese" else status
+            search_categories.append(weight_tag)
+            
+            # If they also have a condition -> Add the condition category too
+            if condition != "No":
+                search_categories.append(condition)
+
+        # Query the database based on the logic-built list
+        recommended_specialists = Specialist.objects.filter(
+            location__iexact=user_city,
+            specialist_type__in=search_categories
+        )
+
+        # 5. Prepare Context for PDF
+        context = {
+            'user': current_user,
+            'record': latest_record,
+            'status': status,
+            'condition': condition,
+            'specialists': recommended_specialists,
+        }
+
+        # 6. Render HTML to PDF
+        # Ensure your template filename is 'report.html' as used below
+        html_string = render_to_string('report.html', context)
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="{current_user.name}_Health_Report.pdf"'
+
+        pisa_status = pisa.CreatePDF(html_string, dest=response)
+        
+        if pisa_status.err:
+            return HttpResponse('Error generating PDF', status=500)
+            
+        return response
+
+    except User.DoesNotExist:
+        return HttpResponse("User not found.", status=404)
+    except BMIRecord.DoesNotExist:
+        return HttpResponse("No BMI records found. Please calculate your BMI first.")
+    except Exception as e:
+        return HttpResponse(f"An unexpected error occurred: {e}", status=500)

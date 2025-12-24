@@ -22,25 +22,9 @@
       align-items: center;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
-    nav h1 {
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: #fff;
-      margin: 0;
-    }
-    nav ul {
-      list-style: none;
-      display: flex;
-      gap: 20px;
-      margin: 0;
-      padding: 0;
-    }
-    nav ul li a {
-      text-decoration: none;
-      color: #fff;
-      font-weight: 500;
-      transition: color 0.3s ease;
-    }
+    nav h1 { font-size: 1.6rem; font-weight: 700; color: #fff; margin: 0; }
+    nav ul { list-style: none; display: flex; gap: 20px; margin: 0; padding: 0; }
+    nav ul li a { text-decoration: none; color: #fff; font-weight: 500; transition: color 0.3s ease; }
     nav ul li a:hover { color: #2ecc71; }
 
     .container {
@@ -52,10 +36,7 @@
       box-shadow: 0 8px 20px rgba(0,0,0,0.15);
     }
     h2 { color: #003366; margin-bottom: 20px; text-align: center; }
-    canvas {
-      max-width: 100%;
-      margin-bottom: 30px;
-    }
+    
     table {
       width: 100%;
       border-collapse: collapse;
@@ -65,11 +46,54 @@
     th, td { padding: 12px; text-align: center; }
     th { background: #003366; color: #fff; }
     tr:nth-child(even) { background: #f9f9f9; }
+
+    /* --- New Button Styling --- */
+    .btn-wrapper {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+
+    .download-btn {
+      background: #003366;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .download-btn:hover {
+      background: #2ecc71;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    /* --- Print Logic: Hides Nav and Button on PDF --- */
+    @media print {
+      nav, .btn-wrapper, .fevicon {
+        display: none !important;
+      }
+      body {
+        background: white !important;
+      }
+      .container {
+        margin: 0;
+        box-shadow: none;
+        width: 100%;
+        max-width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <!-- ✅ Navigation -->
   <nav>
     <h1>BMI System</h1>
     <ul>
@@ -80,14 +104,11 @@
     </ul>
   </nav>
 
-  <!-- ✅ Progress Section -->
-  <div class="container">
-    <h2>Your Progress</h2>
+  <div class="container" id="printableArea">
+    <h2>Your Progress Report</h2>
 
-    <!-- ✅ Graph -->
     <canvas id="bmiChart"></canvas>
 
-    <!-- ✅ Progress Table -->
     <table>
       <tr>
         <th>Date</th>
@@ -96,7 +117,7 @@
         <th>BMI</th>
         <th>Status</th>
       </tr>
-      {% for record in records reversed %}   <!-- newest first in table -->
+      {% for record in records reversed %}
       <tr>
         <td>{{ record.created_at|date:"Y-m-d H:i" }}</td>
         <td>{{ record.height }}</td>
@@ -110,16 +131,19 @@
       </tr>
       {% endfor %}
     </table>
-  </div>
 
-  <!-- ✅ Chart.js Script -->
+    <div class="btn-wrapper">
+    <a href="{% url 'download_report' %}" class="download-btn">
+        <span>Generate Health Report (PDF)</span>
+    </a>
+</div>
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     const ctx = document.getElementById('bmiChart').getContext('2d');
     const bmiChart = new Chart(ctx, {
       type: 'line',
       data: {
-        // oldest → newest so latest is on the right
         labels: [{% for record in records %}'{{ record.created_at|date:"Y-m-d" }}',{% endfor %}],
         datasets: [{
           data: [{% for record in records %}{{ record.bmi }},{% endfor %}],
@@ -138,15 +162,6 @@
             display: true,
             text: 'BMI Progress Over Time',
             font: { size: 18 }
-          }
-        },
-        scales: {
-          y: {
-            beginAtZero: false,
-            title: { display: true, text: 'BMI Score' }
-          },
-          x: {
-            title: { display: true, text: 'Date' }
           }
         }
       }
