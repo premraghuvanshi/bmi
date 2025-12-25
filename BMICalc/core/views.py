@@ -513,3 +513,10 @@ def download_report(request):
         return HttpResponse("No BMI records found. Please calculate your BMI first.")
     except Exception as e:
         return HttpResponse(f"An unexpected error occurred: {e}", status=500)
+def privacy_policy(request):
+    """Renders the Privacy Policy page."""
+    return render(request, 'privacy.html')
+
+def terms_of_service(request):
+    """Renders the Terms & Disclaimer page."""
+    return render(request, 'terms.html')
